@@ -56,13 +56,13 @@ function loginUser(form) {
   })
 }
 function getUserID(user) {
-  var body = `{
-    "username": "`+user+`",
-  }`
+  // var body = `{
+  //   "username": "`+user+`",
+  // }`
   return axios({
     method: "get",
-    url: 'http://blockchainproye.azurewebsites.net/api/GetById?code=Khl4toWT6m/CA/eslr3t4zV3goKEtE9PjeJAZ/XS5ga5uwfXqlWq8A==',
-    data: body
+    url: 'http://blockchainproye.azurewebsites.net/api/GetById?code=CvgfU7Yg9sXaU/QOHYIU1DLObluDlqTace9kmHJ0F1QghT4Fh5wahg==&clientId=default',
+    data: {"username": user}
   }).then((res) => {
     console.log(res);
     return res;
