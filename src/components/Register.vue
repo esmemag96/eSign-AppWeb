@@ -46,6 +46,14 @@
                 </b-form-group>
                 <b-button type="submit" variant="primary">Submit</b-button>
               </b-form>
+              <router-link to="login">
+                <b-button
+                  type="submit"
+                  variant="secondary"
+                  class="text-center"
+                  size="sm"
+                >Already have an account? Login</b-button>
+              </router-link>
             </b-card-text>
           </b-card>
         </b-col>
@@ -74,21 +82,23 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
-      console.log('====================================');
-      console.log(this.form);
-      console.log('====================================');
       registerUser(this.form).then(response => {
         console.log(response);
+        let username = this.form.username;
+        let name = this.form.name;
+        this.$router.push({
+          name: "profile",
+          params: { username, name }
+        });
       });
     },
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
-      this.form.email = "";
       this.form.name = "";
-      this.form.food = null;
-      this.form.checked = [];
+      this.form.username = "";
+      this.form.email = "";
+      this.form.password = "";
       // Trick to reset/clear native bcontainerser form validation state
       this.show = false;
       this.$nextTick(() => {

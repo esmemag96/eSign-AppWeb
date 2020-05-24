@@ -20,13 +20,13 @@
           </b-list-group>
           <b-row class="text-center">
             <b-col md="6" offset-md="3">
-              <router-link to="file">
+              <router-link :to="{ name: 'file', params: { id, name, username}}">
                 <b-button
                   type="submit"
                   variant="primary"
                   class="text-center"
                   size="md"
-                >Upload New Document</b-button>
+                >Create New Document</b-button>
               </router-link>
             </b-col>
           </b-row>
@@ -45,8 +45,8 @@ export default {
     return {
       user: {
         id: "",
-        name: "John Doe",
-        username: "john-doe"
+        name: "",
+        username: ""
       },
       documents: [
         {

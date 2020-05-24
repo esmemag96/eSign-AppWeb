@@ -9,7 +9,18 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      user: {
+        id: "",
+        name: "",
+        username: ""
+      }
+    };
+  },
+  created() {
+    this.id = this.$route.params.userId;
+    this.name = this.$route.params.name;
+    this.username = this.$route.params.username;
   }
 };
 </script>

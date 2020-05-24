@@ -1,5 +1,5 @@
 var axios = require("axios");
-const KEY = "JRHg8AizBk37dEw0eigcZ0aZ/4uPMdTooUXAukfqJN/iKyxhsRKGKQ==";
+// const KEY = "JRHg8AizBk37dEw0eigcZ0aZ/4uPMdTooUXAukfqJN/iKyxhsRKGKQ==";
 
 function sendFile(file) {
   let esmeFile = new FormData()
@@ -24,10 +24,7 @@ function sendFile(file) {
 function createDocument(form) {
   return axios({
     method: "post",
-    url: 'http://blockchainproye.azurewebsites.net/api/register',
-    headers: {
-      'x-functions-key': KEY
-    },
+    url: 'http://localhost:7071/api/CreateDocument',
     data: form,
   }).then((res) => {
     console.log(res);
@@ -38,7 +35,7 @@ function createDocument(form) {
 function registerUser(form) {
   return axios({
     method: "post",
-    url: 'http://blockchainproye.azurewebsites.net/api/register',
+    url: 'http://localhost:7071/api/register',
     data: form,
   }).then((res) => {
     console.log(res);
@@ -60,8 +57,8 @@ function getUserID(user) {
   //   "username": "`+user+`",
   // }`
   return axios({
-    method: "get",
-    url: 'http://blockchainproye.azurewebsites.net/api/GetById?code=CvgfU7Yg9sXaU/QOHYIU1DLObluDlqTace9kmHJ0F1QghT4Fh5wahg==&clientId=default',
+    method: "post",
+    url: 'http://localhost:7071/api/getId',
     data: {"username": user}
   }).then((res) => {
     console.log(res);

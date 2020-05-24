@@ -8,20 +8,24 @@
     </div>
     <b-row>
       <b-col md="6" class="fileCol">
-        <b-card no-body overlay>
-          <label for>Please select a file (PDF only)</label>
-          <b-form-file
-            accept=".pdf"
-            v-model="file"
-            :state="Boolean(file)"
-            placeholder="Seleccione un archivo"
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
-          <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
-          <b-col class="text-right" sm="12">
-              <b-button variant="primary" @click="sendFileFunction(file)">Upload</b-button>
-          </b-col>
-        </b-card>
+        <b-container fluid="sm">
+          <b-card no-body overlay>
+            <b-card-body title="Step1: Add File">
+              <label for>Please select a file (PDF only)</label>
+              <b-form-file
+                accept=".pdf"
+                v-model="file"
+                :state="Boolean(file)"
+                placeholder="Seleccione un archivo"
+                drop-placeholder="Drop file here..."
+              ></b-form-file>
+              <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+              <b-col class="text-right" sm="12">
+                <b-button variant="primary" @click="sendFileFunction(file)">Upload</b-button>
+              </b-col>
+            </b-card-body>
+          </b-card>
+        </b-container>
       </b-col>
       <b-col md="6">
         <b-container fluid="sm">
@@ -36,7 +40,7 @@
             ></b-card-img>
               </b-col>-->
               <b-col md="11">
-                <b-card-body title="Add Users">
+                <b-card-body title="Step 2: Add Users">
                   <b-card-text>Add users to invite them to this document</b-card-text>
                   <b-row class="my-1">
                     <b-col sm="2">
@@ -63,6 +67,11 @@
         </b-container>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col md="11" class="text-center">
+        <b-button variant="primary" size="lg" @click="createDocument()">Create Document</b-button>
+      </b-col>
+    </b-row>
 
     <h3 class="text-center cargando" v-if="loading">Cargando documento</h3>
     <br />
@@ -86,38 +95,68 @@
 </template>
 
 <script>
-import { sendFile, getUserID } from "../api/index.js";
+import { sendFile, getUserID, createDocument } from "../api/index.js";
 import Header from "./Header.vue";
 // import { log } from "util";
 export default {
   components: { Header },
   data() {
     return {
+      user: {
+        id: "",
+        name: "",
+        username: ""
+      },
       id: "",
       loading: false,
       file: null,
       users: [],
-      text: ""
+      text: "",
+      url: "",
+      blob: ""
     };
   },
   created() {
-    // getData().then(data => {
-    //   for (var i = 0; i < data.data.response.result.results.length; i++) {
-    //     this.bastanteos.push(data.data.response.result.results[i])
-    //   }
-    //   console.log(this.bastanteos);
-    //   console.log(data);
-    // });
+    this.id = this.$route.params.id;
+    this.name = this.$route.params.name;
+    this.username = this.$route.params.username;
   },
   methods: {
     sendFileFunction(file) {
       this.loading = true;
       sendFile(file).then(response => {
         console.log(response);
+        this.url = response.data.body.url;
+        this.blob = response.data.body.blobName;
       });
     },
     addUser(user) {
       getUserID(user).then(response => {
+        console.log(response.data.body);
+        this.users.push(response.data.body);
+        this.text = "";
+        this.makeToast();
+      });
+    },
+    makeToast(append = false) {
+      this.$bvToast.toast(`User added`, {
+        title: "User Invite",
+        autoHideDelay: 5000,
+        appendToast: append
+      });
+    },
+    createDocument() {
+      let body = {
+        userId: this.id,
+        hash: "seerefedsz",
+        url: this.url,
+        users: this.users,
+        paymentAmount: 200,
+        paymentDone: false,
+        nameBlob: this.blob
+      };
+      console.log(body);
+      createDocument(body).then(response => {
         console.log(response);
       });
     }
@@ -165,7 +204,7 @@ export default {
   position: absolute;
   width: 5px;
   height: 5px;
-  background: #fff;
+  background: #76c788;
   border-radius: 50%;
   animation: lds-default 1.2s linear infinite;
 }

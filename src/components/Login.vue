@@ -34,7 +34,7 @@
                     placeholder="Password"
                   ></b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="primary" class="text-center">Submit</b-button>
+                <b-button type="submit" variant="primary" class="text-center">Login</b-button>
               </b-form>
             </b-card-text>
             <router-link to="register">
@@ -43,7 +43,7 @@
                 variant="secondary"
                 class="text-center"
                 size="sm"
-              >Registar usuario</b-button>
+              >Don't have an account? Register</b-button>
             </router-link>
           </b-card>
         </b-col>
