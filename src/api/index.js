@@ -1,59 +1,80 @@
 var axios = require("axios");
+const KEY = "JRHg8AizBk37dEw0eigcZ0aZ/4uPMdTooUXAukfqJN/iKyxhsRKGKQ==";
 
-function sendFile(file){
+function sendFile(file) {
   let esmeFile = new FormData()
   esmeFile.set('file', file);
 
   return axios({
     method: "post",
-    url: 'http://DESKTOP-0ODSDIV.mexico.ibm.com:8080/api/upload',
+    url: 'http://localhost:7071/api/UploadFile',
     headers: {
       'Content-Type': 'multipart/form-data'
     },
     data: esmeFile,
-  }).then((res)=>{
-      console.log(res);
-      return res;
+  }).then((res) => {
+    console.log(res);
+    return res;
   }).catch((err) => {
     console.log(err);
     return err;
-  })
-}
-function checkStatus(id){
-  return axios({
-    method: "get",
-    url: 'http://DESKTOP-0ODSDIV.mexico.ibm.com:8080/api/document/status?document_id='+id+'',
-  }).then((res)=>{
-      console.log(res);
-      return res;
-  }).catch((err) => {
-    console.log(err);
-    return err;
-  })
-}
-function getResult(id){
-  return axios({
-    method: "get",
-    url: 'http://DESKTOP-0ODSDIV.mexico.ibm.com:8080/api/document/query?document_id='+id+'',
-  }).then((res)=>{
-      console.log(res);
-      return res;
   })
 }
 
-function deleteFile(id){
+function createDocument(form) {
   return axios({
-    method: "delete",
-    url: 'http://DESKTOP-0ODSDIV.mexico.ibm.com:8080/api/document',
-    data:{
-      "document_id": id
-    }
-  }).then((res)=>{
-      console.log(res);
-      return res;
-  }).catch((err) => {
-    console.log(err);
-    return err;
+    method: "post",
+    url: 'http://blockchainproye.azurewebsites.net/api/register',
+    headers: {
+      'x-functions-key': KEY
+    },
+    data: form,
+  }).then((res) => {
+    console.log(res);
+    return res;
   })
 }
-export { sendFile,checkStatus, getResult, deleteFile }
+
+function registerUser(form) {
+  return axios({
+    method: "post",
+    url: 'http://blockchainproye.azurewebsites.net/api/register',
+    data: form,
+  }).then((res) => {
+    console.log(res);
+    return res;
+  })
+}
+function loginUser(form) {
+  return axios({
+    method: "post",
+    url: 'http://localhost:7071/api/authenticate',
+    data: form,
+  }).then((res) => {
+    console.log(res);
+    return res;
+  })
+}
+function getUserID(user) {
+  var body = `{
+    "username": "`+user+`",
+  }`
+  return axios({
+    method: "get",
+    url: 'http://blockchainproye.azurewebsites.net/api/getId',
+    headers: {
+      'x-functions-key': KEY
+    },
+    data: body
+  }).then((res) => {
+    console.log(res);
+    return res;
+  })
+}
+export {
+  sendFile,
+  createDocument,
+  registerUser,
+  loginUser,
+  getUserID
+}

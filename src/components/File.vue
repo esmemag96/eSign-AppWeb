@@ -3,30 +3,67 @@
     <Header></Header>
     <!-- Styled -->
     <div class="row text-center textHeader">
-      <h2 class="col">Subir Contratos</h2>
+      <h2 class="col">Create New Document</h2>
       <br />
     </div>
-    <div class="row selectFile">
-      <div class="col-md-6 col-sm-12">
-        <label for>Por favor seleccione el archivo</label>
-        <b-form-file
-          accept=".pdf, .doc, .docx"
-          v-model="file"
-          :state="Boolean(file)"
-          placeholder="Seleccione un archivo"
-          drop-placeholder="Drop file here..."
-        ></b-form-file>
-        <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
-      </div>
-    </div>
-    <div class="row text-right">
-      <div class="col-6">
-        <!-- <router-link to="bastanteo">     
-        <b-button variant="primary">Aceptar</b-button>-->
-        <b-button variant="primary" @click="sendFileFunction(file)">Aceptar</b-button>
-        <!-- </router-link> -->
-      </div>
-    </div>
+    <b-row>
+      <b-col md="6" class="fileCol">
+        <b-card no-body overlay>
+          <label for>Please select a file (PDF only)</label>
+          <b-form-file
+            accept=".pdf"
+            v-model="file"
+            :state="Boolean(file)"
+            placeholder="Seleccione un archivo"
+            drop-placeholder="Drop file here..."
+          ></b-form-file>
+          <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+          <b-col class="text-right" sm="12">
+              <b-button variant="primary" @click="sendFileFunction(file)">Upload</b-button>
+          </b-col>
+        </b-card>
+      </b-col>
+      <b-col md="6">
+        <b-container fluid="sm">
+          <b-card no-body class="overflow-hidden" style="max-width: 540px;">
+            <b-row no-gutters>
+              <!-- <b-col md="3">
+            <b-card-img
+              src="https://image.flaticon.com/icons/svg/1692/1692482.svg"
+              alt="Image"
+              class="rounded-0"
+              bottom
+            ></b-card-img>
+              </b-col>-->
+              <b-col md="11">
+                <b-card-body title="Add Users">
+                  <b-card-text>Add users to invite them to this document</b-card-text>
+                  <b-row class="my-1">
+                    <b-col sm="2">
+                      <label for="input-small">User:</label>
+                    </b-col>
+                    <b-col sm="10">
+                      <b-form-input
+                        v-model="text"
+                        id="input-small"
+                        size="sm"
+                        placeholder="Enter username"
+                      ></b-form-input>
+                    </b-col>
+                  </b-row>
+                  <b-row class="text-right">
+                    <b-col sm="12">
+                      <b-button variant="primary" size="sm" @click="addUser(text)">Add</b-button>
+                    </b-col>
+                  </b-row>
+                </b-card-body>
+              </b-col>
+            </b-row>
+          </b-card>
+        </b-container>
+      </b-col>
+    </b-row>
+
     <h3 class="text-center cargando" v-if="loading">Cargando documento</h3>
     <br />
     <div class="loading" v-if="loading">
@@ -45,18 +82,11 @@
         <div></div>
       </div>
     </div>
-    <footer>
-      <div class="copyright py-4 text-center text-white">
-        <div class="container">
-          <small>Copyright &copy; IBM México 2019</small>
-        </div>
-      </div>
-    </footer>
   </section>
 </template>
 
 <script>
-import { sendFile } from "../api/index.js";
+import { sendFile, getUserID } from "../api/index.js";
 import Header from "./Header.vue";
 // import { log } from "util";
 export default {
@@ -66,7 +96,8 @@ export default {
       id: "",
       loading: false,
       file: null,
-      bastanteos: []
+      users: [],
+      text: ""
     };
   },
   created() {
@@ -79,45 +110,17 @@ export default {
     // });
   },
   methods: {
-    // goToBastanteo(id) {
-    //   this.$router.push({ name: "bastanteo", params: { id } });
-    // },
     sendFileFunction(file) {
       this.loading = true;
       sendFile(file).then(response => {
-        console.log(response.data.results.document_id);
-        this.id = response.data.results.document_id;
-        this.refreshStatus(this.id);
+        console.log(response);
       });
-      // .catch(e => {
-      //   alert("Parece que hubo un problema, por favor intentelo de nuevo.");
-      // });
+    },
+    addUser(user) {
+      getUserID(user).then(response => {
+        console.log(response);
+      });
     }
-    //     refreshStatus(id) {
-    //       console.log('si entró');
-    //       const self = this;
-    //       checkStatus(this.id).then(response => {
-    //         let doc_id = this.id;
-    //         if (
-    //           response.data.results.status === "available" ||
-    //           response.data.results.status === "available with notices"
-    //         ) {
-    //           console.log("listo");
-    //           console.log(doc_id);
-    //           this.$router.push({ name:'bastanteo' , params:{id: doc_id}})
-    //         }
-    //         else if(response.data.results.status === "failed"){
-    //           alert("Parece que hubo un problema, por favor intentelo de nuevo.");
-    //         }
-    //         else {
-    //           setTimeout(function() {
-    //             console.log('aun no');
-    //             self.refreshStatus(doc_id);
-    //           }, 5000);
-    //         }
-    //       });
-    //     },
-    //   }
   }
 };
 </script>
@@ -128,15 +131,14 @@ export default {
   color: black;
   margin-left: 1em;
 }
+
 .custom-file-input.is-invalid ~ .custom-file-label {
-  border-color: #2b3e50;
-  border: 2px solid;
-  border-radius: 21px;
+  border-color: #76c788;
+  border: 1px solid;
 }
 .custom-file-input.is-valid ~ .custom-file-label {
   border-color: #76c788;
-  border: 2px solid;
-  border-radius: 21px;
+  border: 1px solid;
 }
 #home {
   font-family: "Montserrat", sans-serif;
