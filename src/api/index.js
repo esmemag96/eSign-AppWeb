@@ -61,10 +61,7 @@ function getUserID(user) {
   }`
   return axios({
     method: "get",
-    url: 'http://blockchainproye.azurewebsites.net/api/getId',
-    headers: {
-      'x-functions-key': KEY
-    },
+    url: 'http://blockchainproye.azurewebsites.net/api/GetById?code=Khl4toWT6m/CA/eslr3t4zV3goKEtE9PjeJAZ/XS5ga5uwfXqlWq8A==',
     data: body
   }).then((res) => {
     console.log(res);
