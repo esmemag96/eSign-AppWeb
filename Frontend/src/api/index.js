@@ -7,7 +7,8 @@ function sendFile(file) {
 
   return axios({
     method: "post",
-    url: 'http://localhost:7071/api/UploadFile',
+    url: 'https://blockchainproye.azurewebsites.net/api/UploadFile?code=TuU9vZ0XdBiV2ZgIVhRdEAaGDoI0/xiN5OIGBAL5kIRkjjJl/X9VBw==',
+    //url: 'http://localhost:7071/api/UploadFile',
     headers: {
       'Content-Type': 'multipart/form-data'
     },
@@ -24,7 +25,8 @@ function sendFile(file) {
 function createDocument(form) {
   return axios({
     method: "post",
-    url: 'http://localhost:7071/api/CreateDocument',
+    url: 'https://blockchainproye.azurewebsites.net/api/CreateDocument?code=opahftLQ3Ga9lZeppZtHJLBFU1RRgTl5iW0gDqqz4wx5LzBZp478IA==',
+    // url: 'http://localhost:7071/api/CreateDocument',
     data: form,
   }).then((res) => {
     console.log(res);
@@ -35,7 +37,8 @@ function createDocument(form) {
 function registerUser(form) {
   return axios({
     method: "post",
-    url: 'http://localhost:7071/api/register',
+    url: 'https://blockchainproye.azurewebsites.net/api/register?code=wjAvT7SVnX0pXA1wIBVkwXhexn9DM13x40tqv4rxNNHIYgAHmyTuzA==',
+    //url: 'http://localhost:7071/api/register',
     data: form,
   }).then((res) => {
     console.log(res);
@@ -45,7 +48,8 @@ function registerUser(form) {
 function loginUser(form) {
   return axios({
     method: "post",
-    url: 'http://localhost:7071/api/authenticate',
+    url: 'https://blockchainproye.azurewebsites.net/api/authenticate?code=3AlJqhBUdQaUWoYWue7UvUNYUTFUBapd8ua4Jyd7WCdoPyQh7O6muQ==',
+    //url: 'http://localhost:7071/api/authenticate',
     data: form,
   }).then((res) => {
     console.log(res);
@@ -58,7 +62,8 @@ function getUserID(user) {
   // }`
   return axios({
     method: "post",
-    url: 'http://localhost:7071/api/getId',
+    url: 'https://blockchainproye.azurewebsites.net/api/GetById?code=Khl4toWT6m/CA/eslr3t4zV3goKEtE9PjeJAZ/XS5ga5uwfXqlWq8A==',
+    // url: 'http://localhost:7071/api/getId',
     data: {"username": user}
   }).then((res) => {
     console.log(res);
