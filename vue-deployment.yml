@@ -18,7 +18,7 @@ metadata:
   labels:
     app: quiz-app
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: quiz-frontend
-        image: gcr.io/blockchain-apre/blockchain-front-master_app
+        image: gcr.io/blockchain-apre/quiz-frontend
         imagePullPolicy: Always
         ports:
         - name: http-server
