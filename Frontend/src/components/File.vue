@@ -20,6 +20,9 @@
                 drop-placeholder="Drop file here..."
               ></b-form-file>
               <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+              <b-col class="text-right" sm="12">
+                <b-button variant="primary" @click="sendFileFunction(file)">Upload</b-button>
+              </b-col>
             </b-card-body>
           </b-card>
         </b-container>
@@ -28,6 +31,14 @@
         <b-container fluid="sm">
           <b-card no-body class="overflow-hidden" style="max-width: 540px;">
             <b-row no-gutters>
+              <!-- <b-col md="3">
+            <b-card-img
+              src="https://image.flaticon.com/icons/svg/1692/1692482.svg"
+              alt="Image"
+              class="rounded-0"
+              bottom
+            ></b-card-img>
+              </b-col>-->
               <b-col md="11">
                 <b-card-body title="Step 2: Add Users">
                   <b-card-text>Add users to invite them to this document</b-card-text>
@@ -54,42 +65,15 @@
             </b-row>
           </b-card>
         </b-container>
-        <b-container fluid="sm">
-          <b-card no-body class="overflow-hidden" style="max-width: 540px;">
-            <b-row no-gutters>
-              <b-col md="11">
-                <b-card-body title="Step 3: Add Signees">
-                  <b-card-text>Add signee</b-card-text>
-                  <b-row class="my-1">
-                    <b-col sm="2">
-                      <label for="input-small">Signee:</label>
-                    </b-col>
-                    <b-col sm="10">
-                      <b-form-input
-                        v-model="signee"
-                        id="input-small"
-                        size="sm"
-                        placeholder="Enter signee"
-                      ></b-form-input>
-                    </b-col>
-                  </b-row>
-                  <b-row class="text-right">
-                    <b-col sm="12">
-                      <b-button
-                        variant="primary"
-                        size="sm"
-                        @click="uploadDocument(signee)"
-                      >Add</b-button>
-                    </b-col>
-                  </b-row>
-                </b-card-body>
-              </b-col>
-            </b-row>
-          </b-card>
-        </b-container>
       </b-col>
     </b-row>
-    <h3 class="text-center cargando" v-if="loading">Loading</h3>
+    <b-row>
+      <b-col md="11" class="text-center">
+        <b-button variant="primary" size="lg" @click="createDocument()">Create Document</b-button>
+      </b-col>
+    </b-row>
+
+    <h3 class="text-center cargando" v-if="loading">Cargando documento</h3>
     <br />
     <div class="loading" v-if="loading">
       <div class="lds-default">
@@ -107,18 +91,11 @@
         <div></div>
       </div>
     </div>
-    <b-row>
-      <b-col md="11" class="text-center">
-        <b-button variant="primary" size="lg" @click="createDocument()">Create Document</b-button>
-      </b-col>
-    </b-row>
   </section>
 </template>
 
 <script>
 import { sendFile, getUserID, createDocument } from "../api/index.js";
-import { handleUploadDocument } from "../api/blockchain.js";
-
 import Header from "./Header.vue";
 // import { log } from "util";
 export default {
@@ -135,7 +112,6 @@ export default {
       file: null,
       users: [],
       text: "",
-      signee: "",
       url: "",
       blob: ""
     };
@@ -146,49 +122,42 @@ export default {
     this.username = this.$route.params.username;
   },
   methods: {
+    sendFileFunction(file) {
+      this.loading = true;
+      sendFile(file).then(response => {
+        console.log(response);
+        this.url = response.data.body.url;
+        this.blob = response.data.body.blobName;
+      });
+    },
     addUser(user) {
       getUserID(user).then(response => {
+        console.log(response.data.body);
         this.users.push(response.data.body);
         this.text = "";
         this.makeToast();
-        return this.users;
       });
-    },
-    uploadDocument(signee) {
-      handleUploadDocument(signee).then(response => {
-        console.log(response);
-      });
-      this.makeToast();
     },
     makeToast(append = false) {
       this.$bvToast.toast(`User added`, {
-        title: "Send",
+        title: "User Invite",
         autoHideDelay: 5000,
         appendToast: append
       });
     },
     createDocument() {
-      sendFile(this.file).then(response => {
+      let body = {
+        userId: this.id,
+        hash: "seerefedsz",
+        url: this.url,
+        users: this.users,
+        paymentAmount: 200,
+        paymentDone: false,
+        nameBlob: this.blob
+      };
+      console.log(body);
+      createDocument(body).then(response => {
         console.log(response);
-        this.url = response.data.body.url;
-        this.blob = response.data.body.blobName;
-        let body = {
-          userID: this.id,
-          hash: "seerefedsz",
-          url: response.data.body.url,
-          users: this.users,
-          paymentAmount: 200,
-          paymentDone: false,
-          nameBlob: response.data.body.blobName
-        };
-        this.loading = true;
-        setTimeout(function() {
-          createDocument(body).then(response => {
-            console.log(response);
-            alert("Document created!");
-          });
-        }, 5000);
-        this.loading = false;
       });
     }
   }
@@ -219,7 +188,6 @@ export default {
   margin-bottom: 5em;
 }
 .cargando {
-  color: #76c788;
   margin-top: 1em;
   font-weight: 600;
 }

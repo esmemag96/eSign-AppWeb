@@ -1,9 +1,11 @@
 <template>
   <div>
     <b-navbar type="dark" class="logoWrapper">
-      <img class="logo" src="../assets/esign.png" />
       <b-navbar-nav>
         <b-navbar-brand>Blockchain Contracts</b-navbar-brand>
+        <!-- <router-link to="profile">
+          <b-nav-item>Login</b-nav-item>
+        </router-link>-->
         <router-link to="profile">
           <b-nav-item v-if="username">Profile</b-nav-item>
         </router-link>
@@ -13,9 +15,7 @@
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item>{{username}}</b-nav-item>
-        <router-link to="login">
-          <b-nav-item v-if="username">Logout</b-nav-item>
-        </router-link>
+        <b-nav-item v-if="username">Logout</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
   </div>
@@ -43,7 +43,7 @@ export default {
 <style>
 .logo {
   width: 22em;
-  margin-left: 0.5em;
+  margin-left: 4em;
 }
 .logoWrapper {
   background-color: #2dc596eb;
