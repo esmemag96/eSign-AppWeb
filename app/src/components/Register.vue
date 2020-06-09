@@ -44,6 +44,46 @@
                     placeholder="*******"
                   ></b-form-input>
                 </b-form-group>
+                <b-form-group id="input-group-5" label="Card Number" label-for="card_number">
+                  <b-form-input
+                  id="card_number" 
+                  v-model="form.number" 
+                  placeholder='4242424242424242'
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group id="input-group-6" label="CVC" label-for="cvc">
+                  <b-form-input
+                  id="cvc" 
+                  v-model="form.cvc" 
+                  type="text" 
+                  class="input" 
+                  placeholder='123'
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group id="input-group-9" label="Expiry Day" label-for="exp_day">
+                  <b-form-input
+                  id="exp_month" 
+                  v-model="form.exp_day" 
+                  type="text" :class="['is-danger' ? cardMonthError : '', 'input']" 
+                  placeholder="DD"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group id="input-group-7" label="Expiry Month" label-for="exp_month">
+                  <b-form-input
+                  id="exp_month" 
+                  v-model="form.exp_month" 
+                  type="text" :class="['is-danger' ? cardMonthError : '', 'input']" 
+                  placeholder="MM"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group id="input-group-8" label="Expiry Year" label-for="exp_year">
+                  <b-form-input
+                  id="exp_year" 
+                  v-model="form.exp_year" 
+                  type="text" :class="['is-danger' ? cardMonthError : '', 'input']" 
+                  placeholder="YY"
+                  ></b-form-input>
+                </b-form-group>
                 <b-button type="submit" variant="primary">Submit</b-button>
               </b-form>
               <router-link to="login">
@@ -70,17 +110,33 @@ export default {
   components: { Header },
   data() {
     return {
+      stripeKey: 'pk_test_Tro4UIRJbdwS1mR7qO8EQ73F',
       form: {
         name: "",
         username: "",
         email: "",
         password: ""
       },
-      show: true
+      card: {
+            number: '4242424242424242',
+            cvc: '123',
+            exp_month: '01',
+            exp_year: '19'
+            },
+      show: true,
+                  // validation
+            cardNumberError: null,
+            cardCvcError: null,
+            cardMonthError: null,
+            cardYearError: null,
+            cardCheckSending: false,
+            cardCheckError: false,
+            cardCheckErrorMessage: ''
     };
   },
   methods: {
     onSubmit(evt) {
+      evt.validate()
       evt.preventDefault();
       registerUser(this.form).then(response => {
         console.log(response);
@@ -104,7 +160,13 @@ export default {
       this.$nextTick(() => {
         this.show = true;
       });
-    }
+    },        
+    createToken() {
+            this.cardCheckError = false;
+            window.Stripe.setPublishableKey(this.stripeKey);
+            // window.Stripe.createToken(this.card, proxy(this.stripeResponseHandler, this));
+            this.cardCheckSending = true;
+    },
   }
 };
 </script>

@@ -27,13 +27,11 @@ spec:
     spec:
       containers:
       - name: quiz-frontend
-        image: gcr.io/blockchain-apre/quiz-frontend
+        image: gcr.io/aprendizajeautmatico20/angular--app
         imagePullPolicy: Always
         ports:
         - name: http-server
           containerPort: 8080
         env:
-          - name: blockchain-apre
-            value: blockchain-apre
-          - name: blockchain-apre-media
-            value: blockchain-apre-media
+          - name: aprendizajeautmatico20
+            value: aprendizajeautmatico20
